@@ -19,6 +19,8 @@
     <Name>LR2-4_Stebunov_Nikita_C224</Name>
     <RootNamespace>LR2-4_Stebunov_Nikita_C224</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <WebBrowserPort>
+    </WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

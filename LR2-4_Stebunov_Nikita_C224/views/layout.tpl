@@ -32,6 +32,14 @@
 
     <div class="container body-content">
         {{!base}}
+
+        <h3> Ask a Question </h3>
+        <form action="/home" method="post">
+            <p><textarea rows="2" cols="50" name="QUEST" placeholder="Your question"></textarea></p> 
+            <p><input type="text" size="50" name="ADRESS" placeholder="Your email"></p>
+            <p><input class="btn btn-default" type="submit" value="Send"></p>
+        </form>
+
         <hr />
         <footer>
             <p>&copy; {{ year }} - My Bottle Application</p>
