@@ -14,6 +14,11 @@ def my_form():
     if not email or not username or not question:
         response.status = 400  # ”становка статуса кода 400 дл€ неверного запроса
         return "All fields must be filled in. Please fill in the email, username, and question fields."
+    
+    # ѕроверка максимальной длины email (не более 254 символов)
+    if len(email) > 254:
+        response.status = 400
+        return "Email is too long. Maximum length is 254 characters."
 
     # —писок разрешенных доменов
     allowed_domains = ['gmail.com', 'mail.ru', 'inbox.ru', 'yandex.ru']
@@ -33,4 +38,3 @@ def my_form():
 
      # ¬озвращение сообщени€ с именем пользовател€ и датой обращени€
     return f"Thanks, {username}!<br>The answer will be sent to the mail {email}.<br>Access Date: {access_date}"
-
