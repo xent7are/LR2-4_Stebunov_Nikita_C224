@@ -4,11 +4,11 @@ import re
 from datetime import datetime
 import pdb
 
+# Создание словаря для хранения данных в формате {email: [username, question]}
+questions = {}
+
 @post('/home', method='post')
 def my_form():
-    # Создание словаря для хранения пар email-вопрос
-    questions = {}
-
     # Получение данных из формы
     question = request.forms.get('QUEST', '').strip()
     email = request.forms.get('ADRESS', '').strip()
@@ -37,8 +37,8 @@ def my_form():
         response.status = 400
         return "Неверный формат адреса электронной почты. Пожалуйста, попробуйте снова!"
 
-    # Сохранение emailа и вопроса в словарь
-    questions[email] = question
+    # Сохранение emailа и данных в словарь в формате {email: [username, question]}
+    questions[email] = [username, question]
 
     # Получение текущей даты в формате YYYY-MM-DD
     access_date = datetime.now().strftime('%Y-%m-%d')
