@@ -42,5 +42,13 @@
                 "Which metal is the most electrically conductive?"
             ]
         }
+    },
+    "nikita@gmail.com": {
+        "username": "nikita",
+        "questions_by_date": {
+            "2025-04-07": [
+                "Why is the ocean water salty?"
+            ]
+        }
     }
 }

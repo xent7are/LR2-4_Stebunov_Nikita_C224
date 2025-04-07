@@ -81,7 +81,7 @@ def validate_email(email):
     domain_pattern = '|'.join(re.escape(domain) for domain in allowed_domains)
     pattern = rf'^[a-zA-Z0-9_.+-]+@({domain_pattern})$'
     if not re.match(pattern, email):
-        return False, "Email должен быть на английском языке и соответствовать формату (например, user@gmail.com)."
+        return False, f"Email должен быть на английском языке и соответствовать формату (например, user@gmail.com). Допустимые домены: {', '.join(allowed_domains)}."
     return True, email
 
 # Функция для проверки вопроса
