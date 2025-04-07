@@ -50,8 +50,9 @@ def validate_username(username):
         return False, "Имя не может быть пустым."
     if any(char.isdigit() for char in username):
         return False, "Имя не может содержать цифры."
-    if not re.match(r'^[a-zA-Zа-яА-ЯёЁ-]+$', username):
-        return False, "Имя может содержать только буквы и дефисы."
+    # Проверка на использование только английских букв и дефисов
+    if not re.match(r'^[a-zA-Z-]+$', username):
+        return False, "Имя должно содержать только английские буквы и дефисы. Русские символы, к сожалению, не поддерживаются."
     letters_count = sum(char.isalpha() for char in username)
     if letters_count < 2:
         return False, "Имя должно содержать минимум 2 буквы."
@@ -76,11 +77,11 @@ def validate_email(email):
         return False, "Преддоменная часть email слишком длинная. Максимальная длина — 64 символа."
     # Список разрешенных доменов
     allowed_domains = ['gmail.com', 'mail.ru', 'inbox.ru', 'yandex.ru']
-    # Паттерн для проверки адреса электронной почты
+    # Паттерн для проверки адреса электронной почты (только английские символы)
     domain_pattern = '|'.join(re.escape(domain) for domain in allowed_domains)
     pattern = rf'^[a-zA-Z0-9_.+-]+@({domain_pattern})$'
     if not re.match(pattern, email):
-        return False, "Неверный формат адреса электронной почты. Пожалуйста, попробуйте снова!"
+        return False, "Email должен быть на английском языке и соответствовать формату (например, user@gmail.com)."
     return True, email
 
 # Функция для проверки вопроса
@@ -91,6 +92,9 @@ def validate_question(question):
     # Проверка, что вопрос не состоит только из цифр
     if question.isdigit():
         return False, "Вопрос не может состоять только из цифр."
+    # Проверка на использование только английских букв, цифр и символов
+    if not re.match(r'^[a-zA-Z0-9\s.,!?+-]+$', question):
+        return False, "Вопрос должен содержать только английские буквы, цифры и символы. Русские символы, к сожалению, не поддерживаются."
     letters_count = sum(char.isalpha() for char in question)
     if letters_count < 3:
         return False, "Вопрос должен содержать минимум 3 буквы."
