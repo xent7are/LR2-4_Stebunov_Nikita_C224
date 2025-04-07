@@ -43,6 +43,66 @@ def save_json_data(data):
         print(f"Ошибка при записи в {JSON_FILE_NAME}: {str(e)}")
         raise
 
+# Функция для проверки имени пользователя
+def validate_username(username):
+    username = username.strip()
+    if not username:
+        return False, "Имя не может быть пустым."
+    if any(char.isdigit() for char in username):
+        return False, "Имя не может содержать цифры."
+    if not re.match(r'^[a-zA-Zа-яА-ЯёЁ-]+$', username):
+        return False, "Имя может содержать только буквы и дефисы."
+    letters_count = sum(char.isalpha() for char in username)
+    if letters_count < 2:
+        return False, "Имя должно содержать минимум 2 буквы."
+    # Проверка, что длина имени не слишком большая
+    if len(username) >= 70:
+        return False, "Ваше имя слишком длинное."
+    return True, username
+
+# Функция для проверки адреса электронной почты
+def validate_email(email):
+    email = email.strip()
+    if not email:
+        return False, "Email не может быть пустым."
+    # Проверка, что символ '@' присутствует
+    if '@' not in email:
+        return False, "Email должен содержать символ '@'."
+    subject_part = email.split('@')[0]
+    # Проверка длины преддоменной части email (минимум 3 символа, максимум 64 символа)
+    if len(subject_part) < 3:
+        return False, "Преддоменная часть email слишком короткая. Минимальная длина — 3 символа."
+    if len(subject_part) > 64:
+        return False, "Преддоменная часть email слишком длинная. Максимальная длина — 64 символа."
+    # Список разрешенных доменов
+    allowed_domains = ['gmail.com', 'mail.ru', 'inbox.ru', 'yandex.ru']
+    # Паттерн для проверки адреса электронной почты
+    domain_pattern = '|'.join(re.escape(domain) for domain in allowed_domains)
+    pattern = rf'^[a-zA-Z0-9_.+-]+@({domain_pattern})$'
+    if not re.match(pattern, email):
+        return False, "Неверный формат адреса электронной почты. Пожалуйста, попробуйте снова!"
+    return True, email
+
+# Функция для проверки вопроса
+def validate_question(question):
+    question = question.strip()
+    if not question:
+        return False, "Вопрос не может быть пустым."
+    # Проверка, что вопрос не состоит только из цифр
+    if question.isdigit():
+        return False, "Вопрос не может состоять только из цифр."
+    letters_count = sum(char.isalpha() for char in question)
+    if letters_count < 3:
+        return False, "Вопрос должен содержать минимум 3 буквы."
+    # Проверка длины для вопроса
+    if len(question) <= 3:
+        return False, "Вопрос должен содержать более 3 символов."
+    # Проверка, что длина вопроса не слишком большая
+    if len(question) >= 1000:
+        return False, "Ваш вопрос слишком длинный."
+    return True, question
+
+# Функция для обработки POST-запроса от формы
 @post('/home', method='post')
 def my_form():
     # Получение данных из формы
@@ -52,60 +112,28 @@ def my_form():
     
     # Проверка заполненности полей
     if not email or not username or not question:
-        response.status = 400  # Установка статуса кода 400 для неверного запроса
-        return "Все поля должны быть заполнены. Пожалуйста, заполните поля email, имя пользователя и вопрос."
-
-# Проверка длины преддоменной части email (минимум 3 символа, максимум 64 символа)
-    if '@' in email:  # Проверка, что символ '@' присутствует
-        subject_part = email.split('@')[0]  # Извлечение части до '@'
-        if len(subject_part) > 64:
-            response.status = 400
-            return "Преддоменная часть email слишком длинная. Максимальная длина — 64 символа."
-        if len(subject_part) < 3:
-            response.status = 400
-            return "Преддоменная часть email слишком короткая. Минимальная длина — 3 символа."
-    else:
-        response.status = 400
-        return "Email должен содержать символ '@'."
-
-    # Проверка длины имени
-    if len(username) < 3:
-        response.status = 400
-        return "Имя должно быть минимум из 3-x символов."
-
-    # Проверка, что длина имени не слишком большая
-    if len(username) >= 70:
-        response.status = 400
-        return "Ваше имя слишком длинное."
-
-    # Список разрешенных доменов
-    allowed_domains = ['gmail.com', 'mail.ru', 'inbox.ru', 'yandex.ru']
-    
-    # Паттерн для проверки адреса электронной почты
-    domain_pattern = '|'.join(re.escape(domain) for domain in allowed_domains)
-    pattern = rf'^[a-zA-Z0-9_.+-]+@({domain_pattern})$'
-    
-    # Проверка формата электронной почты
-    if not re.match(pattern, email):
         # Установка статуса кода 400 для неверного запроса
         response.status = 400
-        return "Неверный формат адреса электронной почты. Пожалуйста, попробуйте снова!"
-
-    # Проверка длины для вопроса
-    if len(question) <= 3:
-        response.status = 400
-        return "Вопрос должен содержать более 3 символов."
+        return "Все поля должны быть заполнены. Пожалуйста, заполните поля email, имя пользователя и вопрос."
     
-    # Проверка, что длина вопроса не слишком большая
-    if len(question) >= 1000:
+    username_valid, username_result = validate_username(username)
+    if not username_valid:
+        # Установка статуса кода 400 для неверного запроса
         response.status = 400
-        return "Ваш вопрос слишком длинный."
+        return username_result
     
-    # Проверка, что вопрос не состоит только из цифр
-    if question.isdigit():
+    email_valid, email_result = validate_email(email)
+    if not email_valid:
+        # Установка статуса кода 400 для неверного запроса
         response.status = 400
-        return "Вопрос не может состоять только из цифр."
-
+        return email_result
+    
+    question_valid, question_result = validate_question(question)
+    if not question_valid:
+        # Установка статуса кода 400 для неверного запроса
+        response.status = 400
+        return question_result
+    
     # Загрузка текущих данных из файла
     questions = load_json_data()
     
@@ -114,18 +142,16 @@ def my_form():
     
     # Проверка, существует ли запись для этого email
     if email in questions:
-        # Проверка, совпадает ли имя пользователя с именем, которое сохраненно для этого email
+        # Проверка, совпадает ли имя пользователя с именем, которое сохранено для этого email
         if questions[email]["username"] != username:
             response.status = 400
             return "Имя пользователя не совпадает с владельцем email."
-        
         # Проверка, существует ли уже этот вопрос у пользователя (независимо от даты)
         for date, question_list in questions[email]["questions_by_date"].items():
             # Проход по всем датам и спискам вопросов для этого email
             if question in question_list:
                 response.status = 400
                 return "Этот вопрос уже был задан ранее этим пользователем."
-        
         # Если вопроса нет, добавление его в текущую дату
         if current_date in questions[email]["questions_by_date"]:
             questions[email]["questions_by_date"][current_date].append(question)
@@ -142,8 +168,6 @@ def my_form():
     
     # Сохранение обновленных данных
     save_json_data(questions)
-
-    pdb.set_trace()
-
+    
     # Возвращение сообщения с именем пользователя и датой обращения
     return f"Спасибо, {username}!<br>Ответ будет отправлен на почту {email}.<br>Дата обращения: {current_date}"
