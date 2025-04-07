@@ -32,6 +32,7 @@ def load_json_data():
 def save_json_data(data):
     try:
         with open(JSON_FILE_NAME, 'w', encoding='utf-8') as json_file:
+            # Сохранение данных в JSON
             json.dump(data, json_file, ensure_ascii=False, indent=4)
     except IOError:
         # Ошибка ввода-вывода
@@ -53,11 +54,16 @@ def my_form():
     if not email or not username or not question:
         response.status = 400  # Установка статуса кода 400 для неверного запроса
         return "Все поля должны быть заполнены. Пожалуйста, заполните поля email, имя пользователя и вопрос."
-    
-    # Проверка максимальной длины email (не более 254 символов)
-    if len(email) > 254:
+
+    # Проверка максимальной длины преддоменной части email (не более 64 символов)
+    if '@' in email:  # Проверка, что символ '@' присутствует
+        subject_part = email.split('@')[0]  # Извлечение части до '@'
+        if len(subject_part) > 64:
+            response.status = 400
+            return "Преддоменная часть email слишком длинная. Максимальная длина — 64 символа."
+    else:
         response.status = 400
-        return "Email слишком длинный. Максимальная длина — 254 символа."
+        return "Email должен содержать символ '@'."
 
     # Проверка длины имени
     if len(username) < 3:
@@ -65,7 +71,7 @@ def my_form():
         return "Имя должно быть минимум из 3-x символов."
 
     # Проверка, что длина имени не слишком большая
-    if len(question) >= 70:
+    if len(username) >= 70:
         response.status = 400
         return "Ваше имя слишком длинное."
 
@@ -100,24 +106,41 @@ def my_form():
     # Загрузка текущих данных из файла
     questions = load_json_data()
     
-    # Создание словаря с данными нового вопроса
-    new_question = {"question": question, "username": username, "date": datetime.now().strftime('%Y-%m-%d')}
+    # Получение текущей даты в формате YYYY-MM-DD
+    current_date = datetime.now().strftime('%Y-%m-%d')
     
-    # Проверка, есть ли уже записи для этого email в словаре
+    # Проверка, существует ли запись для этого email
     if email in questions:
-        for q in questions[email]:
-            if q["question"] == question:
+        # Проверка, совпадает ли имя пользователя с именем, которое сохраненно для этого email
+        if questions[email]["username"] != username:
+            response.status = 400
+            return "Имя пользователя не совпадает с владельцем email."
+        
+        # Проверка, существует ли уже этот вопрос у пользователя (независимо от даты)
+        for date, question_list in questions[email]["questions_by_date"].items():
+            # Проход по всем датам и спискам вопросов для этого email
+            if question in question_list:
                 response.status = 400
-                return "Этот вопрос уже был задан ранее."
-        questions[email].append(new_question)
+                return "Этот вопрос уже был задан ранее этим пользователем."
+        
+        # Если вопроса нет, добавление его в текущую дату
+        if current_date in questions[email]["questions_by_date"]:
+            questions[email]["questions_by_date"][current_date].append(question)
+        else:
+            questions[email]["questions_by_date"][current_date] = [question]
     else:
-        questions[email] = [new_question]
+        # Создание новой записи
+        questions[email] = {
+            "username": username,
+            "questions_by_date": {
+                current_date: [question]
+            }
+        }
     
     # Сохранение обновленных данных
     save_json_data(questions)
 
-    # Получение текущей даты в формате YYYY-MM-DD
-    access_date = datetime.now().strftime('%Y-%m-%d')
-    
+    pdb.set_trace()
+
     # Возвращение сообщения с именем пользователя и датой обращения
-    return f"Спасибо, {username}!<br>Ответ будет отправлен на почту {email}.<br>Дата обращения: {access_date}"
+    return f"Спасибо, {username}!<br>Ответ будет отправлен на почту {email}.<br>Дата обращения: {current_date}"

@@ -1,57 +1,46 @@
 {
-    "Alexey34@gmail.com": [
-        {
-            "question": "What is the hardest natural substance on Earth?",
-            "username": "Alexey",
-            "date": "2025-04-07"
-        },
-        {
-            "question": "Which animal has the biggest heart?",
-            "username": "Alexey",
-            "date": "2025-04-07"
+    "Alexey34@gmail.com": {
+        "username": "Alexey",
+        "questions_by_date": {
+            "2025-04-07": [
+                "What is the hardest natural substance on Earth?",
+                "Which animal has the biggest heart?"
+            ]
         }
-    ],
-    "nikitaStebunov57@gmail.com": [
-        {
-            "question": "Which plant is considered the fastest growing?",
-            "username": "Nikita",
-            "date": "2025-04-07"
-        },
-        {
-            "question": "Which continent is the driest?",
-            "username": "Nikita",
-            "date": "2025-04-07"
-        },
-        {
-            "question": "Which planet of the solar system is the hottest?",
-            "username": "Nikita",
-            "date": "2025-04-07"
-        },
-        {
-            "question": "What kind of mammal can fly?",
-            "username": "Nikita",
-            "date": "2025-04-07"
+    },
+    "nikitaStebunov57@gmail.com": {
+        "username": "Nikita",
+        "questions_by_date": {
+            "2025-04-07": [
+                "Which plant is considered the fastest growing?",
+                "Which continent is the driest?",
+                "Which planet of the solar system is the hottest?",
+                "What kind of mammal can fly?"
+            ]
         }
-    ],
-    "Maria103@mail.ru": [
-        {
-            "question": "Which is the largest desert on Earth?",
-            "username": "Maria",
-            "date": "2025-04-07"
+    },
+    "Maria103@mail.ru": {
+        "username": "Maria",
+        "questions_by_date": {
+            "2025-04-07": [
+                "Which is the largest desert on Earth?"
+            ]
         }
-    ],
-    "Kostya1989@mail.ru": [
-        {
-            "question": "Which ocean is the largest in area?",
-            "username": "Kostya",
-            "date": "2025-04-07"
+    },
+    "Kostya1989@mail.ru": {
+        "username": "Kostya",
+        "questions_by_date": {
+            "2025-04-07": [
+                "Which ocean is the largest in area?"
+            ]
         }
-    ],
-    "Vasya817@yandex.ru": [
-        {
-            "question": "Which metal is the most electrically conductive?",
-            "username": "Vasya",
-            "date": "2025-04-07"
+    },
+    "Vasya817@yandex.ru": {
+        "username": "Vasya",
+        "questions_by_date": {
+            "2025-04-07": [
+                "Which metal is the most electrically conductive?"
+            ]
         }
-    ]
+    }
 }
