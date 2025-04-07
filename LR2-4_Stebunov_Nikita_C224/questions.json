@@ -16,6 +16,9 @@
                 "Which continent is the driest?",
                 "Which planet of the solar system is the hottest?",
                 "What kind of mammal can fly?"
+            ],
+            "2025-04-08": [
+                "Why is the sky blue?"
             ]
         }
     },
@@ -48,6 +51,14 @@
         "questions_by_date": {
             "2025-04-07": [
                 "Why is the ocean water salty?"
+            ]
+        }
+    },
+    "stebunovN@gmail.com": {
+        "username": "Nikita",
+        "questions_by_date": {
+            "2025-04-08": [
+                "Why is the red sea called red?"
             ]
         }
     }
