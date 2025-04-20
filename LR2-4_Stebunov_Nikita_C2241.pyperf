@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ProjectTarget>
+    <TargetProject>3dff48b3-f3d6-4e30-bcb4-0174c31a35f4</TargetProject>
+    <FriendlyName>LR2-4_Stebunov_Nikita_C224</FriendlyName>
+  </ProjectTarget>
+  <Reports>
+    <Report>
+      <Filename>C:\Users\xent7\AppData\Local\Temp\LR2-4_Stebunov_Nikita_C2241_20250419.vsp</Filename>
+    </Report>
+  </Reports>
+  <UseVTune>false</UseVTune>
+</ProfilingTarget>

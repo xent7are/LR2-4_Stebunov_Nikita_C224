@@ -64,21 +64,43 @@ def validate_username(username):
 # Функция для проверки адреса электронной почты
 def validate_email(email):
     email = email.strip()
+    # Проверка, является ли строка пустой
     if not email:
         return False, "Email не может быть пустым."
-    # Проверка, что символ '@' присутствует
+    # Проверка, превышает ли длина email 254 символа
+    if len(email) > 254:
+        return False, "Email слишком длинный. Максимальная длина — 254 символа."
+    # Проверка наличия символа '@' в строке
     if '@' not in email:
         return False, "Email должен содержать символ '@'."
-    subject_part = email.split('@')[0]
-    # Проверка длины преддоменной части email (минимум 3 символа, максимум 64 символа)
+    
+    # Извлечение преддоменной и доменной частей
+    # Разделение email на части по символу '@'
+    parts = email.split('@', 1)
+    # Присваивает преддоменную часть (до '@')
+    subject_part = parts[0]
+    # Присваивает доменную часть (после '@') или пустую строку
+    if len(parts) > 1:
+        domain_part = parts[1]
+    else:
+        domain_part = ''
+    
+    # Проверка длины преддоменной части (3–64 символа)
     if len(subject_part) < 3:
         return False, "Преддоменная часть email слишком короткая. Минимальная длина — 3 символа."
     if len(subject_part) > 64:
         return False, "Преддоменная часть email слишком длинная. Максимальная длина — 64 символа."
+    # Проверка длины доменной части (4–190 символов)
+    if len(domain_part) < 4:
+        return False, "Доменная часть email слишком короткая. Минимальная длина — 4 символа."
+    if len(domain_part) > 190:
+        return False, "Доменная часть email слишком длинная. Максимальная длина — 190 символов."
+    
     # Список разрешенных доменов
     allowed_domains = ['gmail.com', 'mail.ru', 'inbox.ru', 'yandex.ru']
     # Паттерн для проверки адреса электронной почты (только английские символы)
     domain_pattern = '|'.join(re.escape(domain) for domain in allowed_domains)
+    # Формирование регулярного выражения для проверки email
     pattern = rf'^[a-zA-Z0-9_.+-]+@({domain_pattern})$'
     if not re.match(pattern, email):
         return False, f"Email должен быть на английском языке и соответствовать формату (например, user@gmail.com). Допустимые домены: {', '.join(allowed_domains)}."
